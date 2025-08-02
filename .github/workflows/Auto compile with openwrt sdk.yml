@@ -13,7 +13,7 @@ on:
         default: 'false'
 env:
   TZ: Asia/Shanghai
-  passwall: ${{ github.repository }}
+  passwall: xiaorouji/openwrt-passwall
   packages: xiaorouji/openwrt-passwall-packages
   package_names: "chinadns-ng dns2socks geoview hysteria ipt2socks microsocks naiveproxy tcping trojan-plus tuic-client shadowsocks-rust shadowsocksr-libev simple-obfs sing-box v2ray-geodata v2ray-plugin xray-core xray-plugin shadow-tls"
 

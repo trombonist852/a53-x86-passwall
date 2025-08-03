@@ -38,6 +38,7 @@ jobs:
         env:
           url_tags: https://api.github.com/repos/${{ env.passwall }}/tags
         run: |
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/luci-app-passwall ${GITHUB_WORKSPACE}
           cd luci-app-passwall
           latest_version=$(awk -F ':=' '/PKG_VERSION|PKG_RELEASE/ {print $2}' Makefile | sed ':a;N;s/\$(PKG_VERSION)-//;s/\n$//;s/\n/-/;ba')
           has_update=$([ -z "$(wget -qO- -t1 -T2 ${{env.url_tags}} | grep \"${latest_version}\")" ] && echo true || echo false)
@@ -62,7 +63,7 @@ jobs:
         if: steps.check_version.outputs.has_update == 'true'
         uses: softprops/action-gh-release@v2
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
           tag_name: ${{steps.check_version.outputs.latest_version}}
           target_commitish: ${{ github.ref_name }}

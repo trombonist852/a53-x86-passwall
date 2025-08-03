@@ -38,7 +38,7 @@ jobs:
         env:
           url_tags: https://api.github.com/repos/${{ env.passwall }}/tags
         run: |
-          git clone https://github.com/xiaorouji/openwrt-passwall.git ${GITHUB_WORKSPACE}
+          git clone https://github.com/xiaorouji/openwrt-passwall.git ${GITHUB_WORKSPACE}/openwrt-passwall
           cd luci-app-passwall
           latest_version=$(awk -F ':=' '/PKG_VERSION|PKG_RELEASE/ {print $2}' Makefile | sed ':a;N;s/\$(PKG_VERSION)-//;s/\n$//;s/\n/-/;ba')
           has_update=$([ -z "$(wget -qO- -t1 -T2 ${{env.url_tags}} | grep \"${latest_version}\")" ] && echo true || echo false)

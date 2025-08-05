@@ -170,7 +170,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: steps.compile.outputs.status == 'success'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
           tag_name: ${{needs.job_check.outputs.passwall_version}}
           files: ${{ env.FIRMWARE }}/passwall/*.ipk
@@ -425,7 +425,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         if: steps.info.outputs.status == 'success'
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REPO_TOKEN }}
         with:
           tag_name: ${{needs.job_check.outputs.passwall_version}}
           body_path: ${{ env.FIRMWARE }}/release.txt

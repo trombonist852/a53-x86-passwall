@@ -199,7 +199,7 @@ jobs:
           
           - platform: aarch64_cortex-a53-21.02
             url_sdk: https://downloads.openwrt.org/releases/21.02.3/targets/mvebu/cortexa53/openwrt-sdk-21.02.3-mvebu-cortexa53_gcc-8.4.0_musl.Linux-x86_64.tar.xz
-            sdk_ver: "21.02.3"
+            sdk_ver: "21.02"
             
           - platform: aarch64_cortex-a72
             url_sdk: https://downloads.openwrt.org/releases/24.10.1/targets/mvebu/cortexa72/openwrt-sdk-24.10.1-mvebu-cortexa72_gcc-13.3.0_musl.Linux-x86_64.tar.zst

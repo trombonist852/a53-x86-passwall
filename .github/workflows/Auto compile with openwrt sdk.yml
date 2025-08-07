@@ -341,9 +341,11 @@ jobs:
           }
           ' include/prereq-build.mk
           
+          
           echo "Replacing rust for aarch64_cortex-a53-21.02"
           svn export https://github.com/openwrt/packages/branches/master/lang/rust feeds/packages/lang/rust
           else
+          fi
 
           echo "fixed rust host build error"
           sed -i 's/--set=llvm\.download-ci-llvm=false/--set=llvm.download-ci-llvm=true/' feeds/packages/lang/rust/Makefile

@@ -329,6 +329,8 @@ jobs:
           git clone https://github.com/openwrt/packages.git --branch main --single-branch --depth 1 packages-temp
           mv packages-temp/lang/rust feeds/packages/lang/rust
           rm -rf packages-temp
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
           fi
 
           echo "fixed rust host build error"

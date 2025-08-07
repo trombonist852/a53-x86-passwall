@@ -324,7 +324,7 @@ jobs:
           
           if [ "${{ matrix.platform }}" = "aarch64_cortex-a53-21.02" ]; then
           rm -f include/prereq-build.mk
-          svn export https://github.com/trombonist852/a53-x86-passwall/branches/main/config/prereq-build.mk include/prereq-build.mk
+          wget -O include/prereq-build.mk https://raw.githubusercontent.com/trombonist852/a53-x86-passwall/main/config/prereq-build.mk
           echo "Replacing rust for aarch64_cortex-a53-21.02"
           svn export https://github.com/openwrt/packages/branches/master/lang/rust feeds/packages/lang/rust
           fi

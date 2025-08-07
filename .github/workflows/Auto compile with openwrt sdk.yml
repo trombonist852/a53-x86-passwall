@@ -333,13 +333,6 @@ jobs:
           rm -rf packages-temp
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-          # 添加关键修复：解决 libc.a 找不到的问题
-          echo "Fixing musl libc issue for rust"
-          sed -i '/define Host\/Compile/a \\texport STAGING_DIR_HOST="$$(STAGING_DIR_HOST)"; \\\n\texport LIBRARY_PATH="$$(STAGING_DIR_HOST)/lib"; \\\n\texport MUSL_ROOT="$$(STAGING_DIR_HOST)";' feeds/packages/lang/rust/Makefile
-
-          # 修复 bootstrap.toml 的 change-id 警告
-          echo "Adding change-id to bootstrap.toml"
-          sed -i '/define Build\/Configure/a \\t$$(SED) \'1i change-id = 138986\' $$(PKG_BUILD_DIR)/config.toml;' feeds/packages/lang/rust/Makefile
           fi
 
           echo "fixed rust host build error"
@@ -376,6 +369,10 @@ jobs:
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_V2ray_Plugin=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Xray_Plugin=y" >> .config
+          if [ "${{ matrix.platform }}" != "aarch64_cortex-a53-21.02" ]; then
+            echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=n" >> .config
+            echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Server=n" >> .config
+          fi
 
           make defconfig
 

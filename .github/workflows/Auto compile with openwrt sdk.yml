@@ -326,7 +326,7 @@ jobs:
           rm -f include/prereq-build.mk
           wget -O include/prereq-build.mk https://raw.githubusercontent.com/trombonist852/a53-x86-passwall/main/config/prereq-build.mk
           echo "Replacing rust for aarch64_cortex-a53-21.02"
-          git clone https://github.com/openwrt/packages.git --branch main --single-branch --depth 1 packages-temp
+          git clone https://github.com/openwrt/packages.git --branch master --single-branch --depth 1 packages-temp
           mv packages-temp/lang/rust feeds/packages/lang/rust
           rm -rf packages-temp
           ./scripts/feeds update -a

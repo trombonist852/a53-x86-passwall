@@ -323,6 +323,8 @@ jobs:
           git clone https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
           
           if [ "${{ matrix.platform }}" = "aarch64_cortex-a53-21.02" ]; then
+          rm -rf feeds/packages/lang/golang
+          git clone https://github.com/sbwml/packages_lang_golang -b 21.x feeds/packages/lang/golang
           rm -f include/prereq-build.mk
           wget -O include/prereq-build.mk https://raw.githubusercontent.com/trombonist852/a53-x86-passwall/main/config/prereq-build.mk
           echo "Replacing rust for aarch64_cortex-a53-21.02"
@@ -331,12 +333,18 @@ jobs:
           rm -rf packages-temp
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+          # 添加关键修复：解决 libc.a 找不到的问题
+          echo "Fixing musl libc issue for rust"
+          sed -i '/define Host\/Compile/a \\texport STAGING_DIR_HOST="$$(STAGING_DIR_HOST)"; \\\n\texport LIBRARY_PATH="$$(STAGING_DIR_HOST)/lib"; \\\n\texport MUSL_ROOT="$$(STAGING_DIR_HOST)";' feeds/packages/lang/rust/Makefile
+
+          # 修复 bootstrap.toml 的 change-id 警告
+          echo "Adding change-id to bootstrap.toml"
+          sed -i '/define Build\/Configure/a \\t$$(SED) \'1i change-id = 138986\' $$(PKG_BUILD_DIR)/config.toml;' feeds/packages/lang/rust/Makefile
           fi
 
           echo "fixed rust host build error"
           sed -i 's/--set=llvm\.download-ci-llvm=false/--set=llvm.download-ci-llvm=true/' feeds/packages/lang/rust/Makefile
           grep -q -- '--ci false \\' feeds/packages/lang/rust/Makefile || sed -i '/x\.py \\/a \        --ci false \\' feeds/packages/lang/rust/Makefile
-
 
           echo "Patch application completed"
           #--------------------------------------end_patches--------------------------------------------

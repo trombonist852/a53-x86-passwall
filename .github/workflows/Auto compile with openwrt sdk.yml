@@ -322,29 +322,25 @@ jobs:
           rm -rf feeds/packages/lang/golang
           git clone https://github.com/sbwml/packages_lang_golang -b 24.x feeds/packages/lang/golang
           
-          if [ "${{ matrix.platform }}" == "aarch64_cortex-a53-21.02" ]; then
-          sed -i '
-          /^\$(eval \$(call SetupHostCommand,python,.*/,/python3\.11/ {
-              /python3\.11/ i\
-          \tpython3.14 -V 2>\&1 | grep '\''Python 3'\'', \\
-          \tpython3.13 -V 2>\&1 | grep '\''Python 3'\'', \\
-          \tpython3.12 -V 2>\&1 | grep '\''Python 3'\'', \\
+          if [ "${{ matrix.platform }}" = "aarch64_cortex-a53-21.02" ]; then
+          sed -i $'
+          /^\\$(eval \\$(call SetupHostCommand,python,.*/,/python3\\.11/ {
+          /python3\\.11/ i\\\tpython3.14 -V 2>&1 | grep \'Python 3\', \\\\
+          \tpython3.13 -V 2>&1 | grep \'Python 3\', \\\\
+          \tpython3.12 -V 2>&1 | grep \'Python 3\', \\\\
           }
           ' include/prereq-build.mk
 
-          sed -i '
-          /^\$(eval \$(call SetupHostCommand,python3,.*/,/python3\.11/ {
-              /python3\.11/ i\
-          \tpython3.14 -V 2>\&1 | grep '\''Python 3'\'', \\
-          \tpython3.13 -V 2>\&1 | grep '\''Python 3'\'', \\
-          \tpython3.12 -V 2>\&1 | grep '\''Python 3'\'', \\
+          sed -i $'
+          /^\\$(eval \\$(call SetupHostCommand,python3,.*/,/python3\\.11/ {
+          /python3\\.11/ i\\\tpython3.14 -V 2>&1 | grep \'Python 3\', \\\\
+          \tpython3.13 -V 2>&1 | grep \'Python 3\', \\\\
+          \tpython3.12 -V 2>&1 | grep \'Python 3\', \\\\
           }
           ' include/prereq-build.mk
-          
-          
+  
           echo "Replacing rust for aarch64_cortex-a53-21.02"
           svn export https://github.com/openwrt/packages/branches/master/lang/rust feeds/packages/lang/rust
-          else
           fi
 
           echo "fixed rust host build error"

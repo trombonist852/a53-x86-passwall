@@ -156,12 +156,31 @@ jobs:
           make defconfig
           echo "make package/luci-app-passwall/{clean,compile} -j$(nproc)"
           make package/luci-app-passwall/{clean,compile} -j$(nproc) V=s
+
+          if [ -d "bin/packages/x86_64/passwall" ]; then
           mv bin/packages/x86_64/passwall/ ../
+          echo "Moved x86_64 packages"
+          fi
+
+          if [ -d "bin/packages/aarch64_cortex-a53/passwall" ]; then
+          mv bin/packages/aarch64_cortex-a53/passwall/ ../
+          echo "Moved aarch64_cortex-a53 packages"
+          fi
+
+          if [ ! -d "../passwall" ]; then
+          echo "ERROR: No passwall packages directory found!"
+          echo "Available architectures:"
+          ls -d bin/packages/*/passwall || true
+          exit 1
+          fi
+
           make clean
           rm .config .config.old
           rm -rf feeds/passwall feeds/passwall.*
           cd ../passwall
-          for i in $(ls); do mv $i luci-${{ matrix.luci_ver }}_$i; done
+          for i in $(ls); do 
+          mv $i luci-${{ matrix.luci_ver }}_$i
+          done
           cd ..
           echo "status=success" >> $GITHUB_OUTPUT
           echo "FIRMWARE=$PWD" >> $GITHUB_ENV
@@ -276,8 +295,8 @@ jobs:
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_NaiveProxy=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Libev_Client=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Libev_Server=y" >> .config
-          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=y" >> .config
-          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Server=y" >> .config
+          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=n" >> .config
+          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Server=n" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Client=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Server=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadow_TLS=y" >> .config

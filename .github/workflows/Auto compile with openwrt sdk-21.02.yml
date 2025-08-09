@@ -262,6 +262,10 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
+          # 修复ring编译问题
+          echo "Fixing ring build flags"
+          sed -i 's/features = \["default", "std"\]/features = ["default", "std", "no_asm"]/' feeds/passwall_packages/shadowsocks-rust/Cargo.toml
+
           #--------------------------------------begin_patches------------------------------------------
           echo "Start applying the patch"
 

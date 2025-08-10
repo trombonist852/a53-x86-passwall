@@ -331,10 +331,6 @@ jobs:
         id: compile
         run: |
           cd sdk
-          # 设置环境变量确保编译时排除问题标志
-          export TARGET_CFLAGS="$(echo $TARGET_CFLAGS | sed 's/-mno-outline-atomics//g')"
-          echo "修改后的 TARGET_CFLAGS: $TARGET_CFLAGS"
-          
           for package in ${{ env.package_names }}; do
               if [ -d "feeds/passwall_packages/$package" ]; then
                   echo "-----------begin compile $package ---------------"

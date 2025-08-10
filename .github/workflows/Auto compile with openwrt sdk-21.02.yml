@@ -261,20 +261,6 @@ jobs:
 
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-      
-      - name: Fix ring build issue
-        run: |
-          cd sdk
-          echo "Fixing ring build flags"
-
-          if [ -f "feeds/passwall_packages/shadowsocks-rust/Makefile" ]; then
-          sed -i '/define Build\/Compile/i \	RING_NO_ASM=1 \\' feeds/passwall_packages/shadowsocks-rust/Makefile
-          echo "Added RING_NO_ASM=1 to Makefile"
-          else
-          echo "shadowsocks-rust Makefile not found!"
-          find feeds/passwall_packages/ -name Makefile
-          exit 1
-          fi
           
           #--------------------------------------begin_patches------------------------------------------
           echo "Start applying the patch"
@@ -309,11 +295,11 @@ jobs:
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_NaiveProxy=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Libev_Client=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Libev_Server=y" >> .config
-          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=y" >> .config
-          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Server=y" >> .config
+          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Client=n" >> .config
+          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadowsocks_Rust_Server=n" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Client=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_ShadowsocksR_Libev_Server=y" >> .config
-          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadow_TLS=y" >> .config
+          echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Shadow_TLS=n" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Simple_Obfs=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_SingBox=y" >> .config
           echo "CONFIG_PACKAGE_luci-app-passwall_INCLUDE_Trojan_Plus=y" >> .config
@@ -339,15 +325,7 @@ jobs:
         run: |
           cd sdk
           make download -j8
-          find dl -size -1024c -exec ls -l {} \; 
-          
-      - name: Remove problematic compiler flag
-        run: |
-          cd sdk
-          # 从关键配置文件中移除问题标志
-          sed -i 's/-mno-outline-atomics//g' include/target.mk
-          sed -i 's/-mno-outline-atomics//g' target/linux/generic/config-*
-          echo "已成功移除所有 -mno-outline-atomics 编译器标志"          
+          find dl -size -1024c -exec ls -l {} \;  
   
       - name: ${{ matrix.platform }} compile
         id: compile

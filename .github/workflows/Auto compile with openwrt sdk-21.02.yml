@@ -339,12 +339,24 @@ jobs:
         run: |
           cd sdk
           make download -j8
-          find dl -size -1024c -exec ls -l {} \;
-
+          find dl -size -1024c -exec ls -l {} \; 
+          
+      - name: Remove problematic compiler flag
+        run: |
+          cd sdk
+          # 从关键配置文件中移除问题标志
+          sed -i 's/-mno-outline-atomics//g' include/target.mk
+          sed -i 's/-mno-outline-atomics//g' target/linux/generic/config-*
+          echo "已成功移除所有 -mno-outline-atomics 编译器标志"          
+  
       - name: ${{ matrix.platform }} compile
         id: compile
         run: |
           cd sdk
+          # 设置环境变量确保编译时排除问题标志
+          export TARGET_CFLAGS="$(echo $TARGET_CFLAGS | sed 's/-mno-outline-atomics//g')"
+          echo "修改后的 TARGET_CFLAGS: $TARGET_CFLAGS"
+          
           for package in ${{ env.package_names }}; do
               if [ -d "feeds/passwall_packages/$package" ]; then
                   echo "-----------begin compile $package ---------------"

@@ -261,6 +261,7 @@ jobs:
 
           ./scripts/feeds update -a
           ./scripts/feeds install -a
+      
       - name: Fix ring build issue
         run: |
           cd sdk
@@ -274,8 +275,6 @@ jobs:
           find feeds/passwall_packages/ -name Makefile
           exit 1
           fi
-
-          grep "RING_NO_ASM=1" feeds/passwall_packages/shadowsocks-rust/Makefile
           
           #--------------------------------------begin_patches------------------------------------------
           echo "Start applying the patch"

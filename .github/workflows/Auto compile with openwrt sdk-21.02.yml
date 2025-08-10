@@ -261,11 +261,22 @@ jobs:
 
           ./scripts/feeds update -a
           ./scripts/feeds install -a
-
-          # 修复ring编译问题
+      - name: Fix ring build issue
+        run: |
+          cd sdk
           echo "Fixing ring build flags"
-          sed -i 's/features = \["default", "std"\]/features = ["default", "std", "no_asm"]/' feeds/passwall_packages/shadowsocks-rust/Cargo.toml
 
+          if [ -f "feeds/passwall_packages/shadowsocks-rust/Makefile" ]; then
+          sed -i '/define Build\/Compile/i \	RING_NO_ASM=1 \\' feeds/passwall_packages/shadowsocks-rust/Makefile
+          echo "Added RING_NO_ASM=1 to Makefile"
+          else
+          echo "shadowsocks-rust Makefile not found!"
+          find feeds/passwall_packages/ -name Makefile
+          exit 1
+          fi
+
+          grep "RING_NO_ASM=1" feeds/passwall_packages/shadowsocks-rust/Makefile
+          
           #--------------------------------------begin_patches------------------------------------------
           echo "Start applying the patch"
 
